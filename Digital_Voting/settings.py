@@ -138,17 +138,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'mubarakmahmunalaka@gmail.com'
-EMAIL_HOST_PASSWORD = 'lwcnnzdxyzmmpzpj'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
 # settings.py
 
-TWILIO_ACCOUNT_SID = 'AC1e07ed9334478ca42e10cd4007a81cbe'
-TWILIO_AUTH_TOKEN = '41824d153b406bd210df7f766be56f8d'
-VERIFY_SID = 'VA2fcdb2c9e812cfc8f3e60d2b4e074301'
-verified_number = "+2348030465772"
+TWILIO_ACCOUNT_SID = ''
+TWILIO_AUTH_TOKEN = ''
+VERIFY_SID = ''
+verified_number = ""
 
 # 2Factor SMS API key
 TWO_FACTOR_API_KEY = 'api_key'

@@ -33,10 +33,10 @@ import pyotp
 #setting up of twilio 
 load_dotenv()
 
-TWILIO_ACCOUNT_SID = 'AC1e07ed9334478ca42e10cd4007a81cbe'
-TWILIO_AUTH_TOKEN = '41824d153b406bd210df7f766be56f8d'
-VERIFY_SID = 'VA2fcdb2c9e812cfc8f3e60d2b4e074301'
-verified_number = "(331) 225-1173"
+TWILIO_ACCOUNT_SID = ''
+TWILIO_AUTH_TOKEN = ''
+VERIFY_SID = ''
+verified_number = ""
 
 
 # OTP = ''.join([str(random.randint(0, 9)) for _ in range(6)])
