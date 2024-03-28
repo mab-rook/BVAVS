@@ -1,0 +1,228 @@
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Registration</title>
+
+    <!-- Font Icon -->
+    <link rel="stylesheet" href="{% static 'register/fonts/material-icon/css/material-design-iconic-font.min.css' %}">
+
+    <!-- Main css -->
+    <link rel="stylesheet" href="{% static 'register/css/style.css' %}">
+    
+
+</head>
+<body>
+
+    <div class="main">
+
+        <!-- action="{% url 'register'%}" -->
+        <div class="container">
+            <form method="POST" id="signupForm" enctype=" multipart/form-data"
+                class="appointment-form"
+                id="appointment-form">
+                {% csrf_token %}
+                <h2>Registration</h2>
+                <div class="">
+                    <h3 style="margin-bottom: 5px;">Voter Image</h3>
+                        <img src="{{voter_image.url}}" height="150" width="130" style="vertical-align: middle;">
+                </div>
+                <div class="form-group-1">
+                    <h3 style="margin-bottom: 0px;">Voter ID </h3>
+                    <input type="text" id="v_id" name="voterid_no" required value="{{voterid_no}}" readonly>
+                </div>
+                <div class="form-group-1">
+                    <h3 style="margin-bottom: 0px;">Name </h3>
+                    <input type="text" name="name"  required value="{{name}}" readonly>
+                </div>
+                <div class="form-group-1">
+                    <h3 style="margin-bottom: 0px;">Father Name </h3>
+                    <input type="text" value="{{father_name}}" readonly>
+                </div>
+                <div class="form-group-1">
+                    <h3 style="margin-bottom: 0px;">Gender </h3>
+                    <input type="text" value="{{gender}}" readonly>
+                </div>
+                <div class="form-group-1">
+                    <h3 style="margin-bottom: 0px;">Date of Birth</h3>
+                    <input type="text" value="{{dateofbirth}}" readonly>
+                </div>
+                <div class="form-group-1">
+                    <h3 style="margin-bottom: 0px;">Address</h3>
+                    <input type="text" value="{{address}}" readonly>
+                </div>
+               
+                <div class="form-group-1">
+                    <h3 style="margin-bottom: 0px;">Mobile no.</h3>
+                    <input type="text" value="{{mobile_no}}" readonly>
+                </div>
+                 <div class="form-group-1">
+                    <h3 style="margin-bottom: 0px;">Email ID</h3>
+                    <input type="text" name="email" id="email" placeholder="Enter Email ID" required>
+                </div>
+                <div class="form-group-1">
+                    <h3 style="margin-bottom: 0px;">Pincode</h3>
+                    <input type="text" value="{{pincode}}" readonly>
+                </div>
+                 <div class="form-group-1">
+                    <h3 style="margin-bottom: 0px;">State</h3>
+                    <input type="text" value="{{state}}" readonly>
+                </div>
+                <div class="form-group-1">
+                    <h3 style="margin-bottom: 0px;">Parliamentary Constituency</h3>
+                    <input type="text" value="{{parliamentary}}" readonly>
+                </div>
+                <div class="form-group-1">
+                    <h3 style="margin-bottom: 0px;">Assembly Constituency</h3>
+                    <input type="text" value="{{assembly}}" readonly>
+                </div>
+                <div class="form-group-1">
+                    <h3 style="margin-bottom: 0px;">Enter Password</h3>
+                    <input name="password1" id="password" required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                                       class="input--style-6" type="password"
+                                       onchange="this.setCustomValidity(this.validity.patternMismatch ? this.title : '');
+                                       if(this.checkValidity()) form.pwd2.pattern = RegExp.escape(this.value);"
+                                       title="Password must contain at least 8 characters, including UPPER/lowercase,numbers and special characters">
+                </div>
+                <div class="form-group-1">
+                    <h3 style="margin-bottom: 0px;">Re-enter Password</h3>
+                    <input name="password2" id="comfirm_password"  class="input--style-6" type="password"
+                                title="Please enter the same Password as above" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                                onchange="this.setCustomValidity(this.validity.patternMismatch ? this.title : '');">
+                </div>
+                <!-- <div class="form-group-1">
+                    <h3 style="margin-bottom: 0px;">Upload Video File</h3>
+                    <input style="color:white;" type="file" name="vidfile" accept="video/*" capture="user" required>
+                </div> -->
+                
+                <!-- <div class="form-group">
+                    <label for="image">Upload Image</label>
+                    <video id="videoElement" width="400" height="300" autoplay></video>
+                    <button type="button" class="btn btn-primary" id="captureBtn">Capture</button>
+                    <input type="hidden" id="imageData" name="image" required>
+                </div> -->
+
+                <div class="form-group">
+                    <button class="btn btn-whit" type="button" id="captureBtn">Capture Image</button><br>
+                    <canvas id="canvas" width="300" height="200" style="border:1px solid black;"></canvas><br>
+                </div>
+                
+                
+                <div class="form-submit">
+                    <input type="submit" name="register"class="submit" value="Register">
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- JS -->
+    <script src="{% static 'register/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'register/js/main.js' %}"></script>
+    <script src="{% static 'register/js/opencv.js' %}"></script>
+    <script>
+        const video = document.createElement('video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // getUserMedia for webcam access
+        navigator.mediaDevices.getUserMedia({
+                video: true
+            })
+            .then(stream => {
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(err => console.error('Error accessing webcam:', err));
+
+        document.getElementById('captureBtn').addEventListener('click', () => {
+            // Draw video frame onto canvas
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        });
+
+        // Submit form data
+        document.getElementById('signupForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            // Get form data
+            const voter_id = document.getElementById('v_id').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const imageDataURL = canvas.toDataURL('image/jpeg');
+
+            // Send form data to server
+            // Example: Using fetch API
+            fetch('register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                        image_data: imageDataURL // Include image data in the request body
+                    }),
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Signup successful');
+                        // Redirect to success page or perform further actions
+                    } else {
+                        console.error('Signup failed');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+    <!-- <script>
+        // Access webcam and capture image
+        const video = document.createElement('video')
+        navigator.mediaDevices.getUserMedia({
+                video: true
+            })
+            .then(function (stream) {
+                
+                var video = document.getElementById('videoElement');
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(function (err) {
+                console.log("An error occurred: " + err);
+            });
+
+        // Capture image from webcam
+        document.getElementById('captureBtn').addEventListener('click', function () {
+            const canvas = document.getElementById('canvas')
+            var context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, 400, 300);
+            const imageDataURL = canvas.toDataURL('image/jpeg')
+        });
+
+        // Form submission handling
+        $(document).ready(function () {
+            $('#signupForm').submit(function (e) {
+                e.preventDefault();
+                // Send form data via AJAX
+                var formData = new FormData(this);
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/voter/register/',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        console.log(response);
+                        // Handle success response
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        // Handle error response
+                    }
+                });
+            });
+        });
+    </script> -->
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>

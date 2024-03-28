@@ -1,0 +1,402 @@
+ {% extends 'admin/master.html' %}
+ {% block title %} home {% endblock title %}
+ {% load static %}
+ {% block content %}
+ <script>
+     /*function DOB() {
+                var lblError = document.getElementById("lblError");
+    
+                //Get the date from the TextBox.
+                var dateString = document.getElementById("dob").value;
+                var regex = /(((0|1)[0-9]|2[0-9]|3[0-1])\/(0[1-9]|1[0-2])\/((19|20)\d\d))$/;
+    
+                //Check whether valid dd/MM/yyyy Date Format.
+                if (regex.test(dateString)) {
+                    var parts = dateString.split("/");
+                    var dtDOB = new Date(parts[1] + "/" + parts[0] + "/" + parts[2]);
+                    var dtCurrent = new Date();
+                    lblError.innerHTML = "Minimum age must be 18 years."
+                    if (dtCurrent.getFullYear() - dtDOB.getFullYear() < 18) {
+                        return false;
+                    }
+    
+                    if (dtCurrent.getFullYear() - dtDOB.getFullYear() == 18) {
+    
+                        //CD: 11/06/2018 and DB: 15/07/2000. Will turned 18 on 15/07/2018.
+                        if (dtCurrent.getMonth() < dtDOB.getMonth()) {
+                            return false;
+                        }
+                        if (dtCurrent.getMonth() == dtDOB.getMonth()) {
+                            //CD: 11/06/2018 and DB: 15/06/2000. Will turned 18 on 15/06/2018.
+                            if (dtCurrent.getDate() < dtDOB.getDate()) {
+                                return false;
+                            }
+                        }
+                    }
+                    lblError.innerHTML = "";
+                    return true;
+                } else {
+                    lblError.innerHTML = "Enter date in dd/mm/yyyy format ONLY."
+                    return false;
+                }
+            }*/
+
+
+            
+                // Simulate fetching data from an API
+                function fetchData(callback) {
+                    // Replace 'data.json' with your actual API endpoint
+                    fetch('/data.json')
+                        .then(response => response.json())
+                        .then(data => callback(data))
+                        .catch(error => console.error('Error fetching data:', error));
+                }
+
+                // Function to display states, local governments, wards, and polling units
+                function displayData(data) {
+                    const outputDiv = document.getElementById('output');
+                    data.states.forEach(state => {
+                        const stateDiv = document.createElement('div');
+                        stateDiv.innerHTML = `<h2>${state}</h2>`;
+                        state.localGovernments.forEach(localGov => {
+                            const localGovDiv = document.createElement('div');
+                            localGovDiv.innerHTML = `<h3>${lgas.lga}</h3>`;
+                            localGov.wards.forEach(ward => {
+                                const wardDiv = document.createElement('div');
+                                wardDiv.innerHTML =
+                                    `<p>${ward.name}</p><ul>${ward.pollingUnits.map(unit => `<li>${unit}</li>`).join('')}</ul>`;
+                                localGovDiv.appendChild(wardDiv);
+                            });
+                            stateDiv.appendChild(localGovDiv);
+                        });
+                        outputDiv.appendChild(stateDiv);
+                    });
+                }
+
+                // Fetch data and display it
+                fetchData(displayData);
+
+
+
+     <!--script based on localgoverment-- >
+
+
+     const states = ['Abia', 'Adamawa', 'Lagos', 'Kano'];
+
+     const localGovernments = {
+         'Abia': ['Umuahia', 'Aba', 'Ohafia'],
+         'Adamawa': ['Yola', 'Mubi', 'Jimeta'],
+         'Lagos': ['Lagos Island', 'Ikeja', 'Badagry'],
+         'Kano': ['Kano Municipal', 'Dala', 'Gwale']
+     };
+
+     const electoralPosts = ['Presindent', 'Governor', 'Senator', 'House of Representatives', 'State Assembly Member'];
+
+     // Function to populate the select element options
+     function populateSelect(selectElement, options) {
+         options.forEach(option => {
+             const optionElement = document.createElement('option');
+             optionElement.value = option;
+             optionElement.text = option;
+             selectElement.appendChild(optionElement);
+         });
+     }
+
+     // Function to update local governments based on selected state
+     function updateLocalGovernments() {
+         const stateSelect = document.getElementById('state');
+         const localGovernmentSelect = document.getElementById('localGovernment');
+         const selectedState = stateSelect.value;
+
+         // Clear current options
+         localGovernmentSelect.innerHTML = '';
+
+         // Populate local governments based on selected state
+         if (selectedState && localGovernments[selectedState]) {
+             populateSelect(localGovernmentSelect, localGovernments[selectedState]);
+         }
+     }
+
+     function fetchStates() {
+     fetch('https://nigeria-states-towns-lga.onrender.com/api/states')
+     .then(response => response.json())
+     .then(data => {
+     const stateSelect = document.getElementById('state');
+     data.forEach(state => {
+     const option = document.createElement('option');
+     option.value = state.id;
+     option.text = state.name;
+     stateSelect.appendChild(option);
+     });
+     });
+     }
+
+     function fetchLocalGovernments() {
+     const stateId = document.getElementById('state').value;
+     const localGovSelect = document.getElementById('localGovernment');
+     localGovSelect.innerHTML = '<option value="">--Select Local Government--</option>';
+     fetch(`/api/local_governments/${stateId}/`)
+     .then(response => response.json())
+     .then(data => {
+     data.forEach(localGov => {
+     const option = document.createElement('option');
+     option.value = localGov.id;
+     option.text = localGov.name;
+     localGovSelect.appendChild(option);
+     });
+     });
+     }
+
+ </script>
+
+ <body>
+     <section id="main-content">
+         <section class="wrapper">
+             <div class="row">
+                 <div class="col-lg-12">
+                     <h3 class="page-header"><i class="fa fa-file-text-o"></i>Add Candidate</h3>
+                     <ol class="breadcrumb">
+                         <li><i class="fa fa-home"></i>Home</li>
+                         <li><i class="icon_document_alt"></i>Candidate</li>
+                         <li><i class="fa fa-file-text-o"></i>Add Candidate</li>
+                     </ol>
+                 </div>
+             </div>
+             <div class="row">
+                 <div class="col-lg-12">
+                     <section class="panel">
+                         <header class="panel-heading">
+                             Candidate
+                         </header>
+                         <div class="panel-body">
+                             <form class="form-horizontal " action="add_candidate" method="POST"
+                                 enctype="multipart/form-data">
+                                 {% csrf_token %}
+                                 <div class="form-group">
+                                     <label class="col-sm-2 control-label">Email</label>
+                                     <div class="col-sm-10">
+                                         <input type="email" class="form-control round-input" name="email" required
+                                             style="width:80%;">
+                                     </div>
+                                 </div>
+                                 <div class="form-group">
+                                     <label class="col-sm-2 control-label">Candidate Name</label>
+                                     <div class="col-sm-10">
+                                         <input type="text" name="name" required class="form-control round-input"
+                                             oninput="this.setCustomValidity('')"
+                                             oninvalid="this.setCustomValidity('Enter Name')" style="width:80%;">
+                                     </div>
+                                 </div>
+                                 <div class="form-group">
+                                     <label class="col-sm-2 control-label">Father Name</label>
+                                     <div class="col-sm-10">
+                                         <input type="text" required name="fname" class="form-control round-input"
+                                             oninput="this.setCustomValidity('')"
+                                             oninvalid="this.setCustomValidity('Enter Father Name')" style="width:80%;">
+                                     </div>
+                                 </div>
+                                 <div class="form-group">
+                                     <label class="col-sm-2 control-label">Gender</label>
+                                     <div class="col-sm-10">
+                                         <select name="gender" class="form-control round-input" required
+                                             style="width:80%;">
+                                             <option selected value="">GENDER</option>
+                                             <option value="MALE">MALE</option>
+                                             <option value="FEMALE">FEMALE</option>
+                                         </select>
+                                     </div>
+                                 </div>
+                                 <div class="form-group">
+                                     <label class="col-sm-2 control-label">Birth Date</label>
+                                     <div class="col-sm-10">
+                                         <input type="date" required name="dob" placeholder="For example: 02/04/1998"
+                                             style="width:80%;" class="form-control round-input">
+                                         <span class="error" id="lblError"></span>
+                                     </div>
+                                 </div>
+                                 <div class="form-group">
+                                     <label class="col-sm-2 control-label">Address</label>
+                                     <div class="col-sm-10">
+                                         <textarea required name="address" class="form-control round-input"
+                                             style="width:80%;"></textarea>
+                                     </div>
+                                 </div>
+                                 <div class="form-group">
+                                     <label class="col-sm-2 control-label">Pincode</label>
+                                     <div class="col-sm-10">
+                                         <input type="text" name="pincode" required maxlength="6" pattern="[0-9]{6}$"
+                                             class="form-control round-input" style="width:80%;">
+                                     </div>
+                                 </div>
+                                 <div class="form-group">
+                                     <label class="col-sm-2 control-label">Mobile Number</label>
+                                     <div class="col-sm-10">
+                                         <input type="tel" pattern="[6-9]{1}[0-9]{9}"
+                                             oninput="this.setCustomValidity('')" style="width:80%;"
+                                             oninvalid="this.setCustomValidity('Enter your Number')" required
+                                             maxlength="10" name="mno" class="form-control round-input">
+                                     </div>
+                                 </div>
+                                 <div id="states">
+                                     <label for="state">Select State:</label>
+                                     <select id="state" onchange="fetchLocalGovernments()">
+                                         <option value="">--Select State--</option>
+                                     </select>
+                                 </div>
+
+                                 <div id="localGovernments">
+                                     <label for="localGovernment">Select Local Government:</label>
+                                     <select id="localGovernment" onchange="fetchConstituencies()">
+                                         <option value="">--Select Local Government--</option>
+                                     </select>
+                                 </div>
+                                 <!-- <div class="form-group">
+                                     <label class="col-sm-2 control-label" for="state">State:</label>
+                                     <div class="col-sm-10">
+                                         <select name="state" id="state" class="form-control round-input"
+                                             style="width:80%;" oninvalid="this.setCustomValidity('Select State')"
+                                             onchange="updateLocalGovernments()">
+                                             <option value="">Select State</option>
+
+                                             <script>
+                                                 populateSelect(document.getElementById('state'), states);
+                                             </script>
+                                         </select>
+                                     </div>
+                                 </div> -->
+
+                                 <!-- <div class="form-group">
+                                     <label class="col-sm-2 control-label" for="localGovernment">Local
+                                         Government:</label>
+                                     <div class="col-sm-10 control-label">
+                                         <select name="ParliamentaryConstituency" id="localGovernment"
+                                             class="form-control round-input" style="width:80%;"
+                                             oninvalid="this.setCustomValidity('Select Parliamentary Constituency')">
+                                             <option value="">Select Local Government</option>
+                                         </select>
+                                     </div>
+
+                                 </div> -->
+
+
+                                 <div class="form-group">
+                                     <label class="col-sm-2 control-label">Candidate Constituency</label>
+                                     <div class="col-sm-10">
+                                         <select name="Constituency1" class="form-control round-input"
+                                             style="width:80%;" required id="Constituency1"
+                                             oninvalid="this.setCustomValidity('Select candidate Constituency')">
+                                             <option value=""> Constituency</option>
+                                         </select>
+                                     </div>
+                                 </div>
+
+
+                                 <div class="form-group">
+                                     <label class="col-sm-2 control-label" for="position">Select Position:</label>
+                                     <div class="col-sm-10">
+                                         <select name="position" id="position" class="form-control round-input" style="width:80%;"
+                                             required
+                                             oninvalid="this.setCustomValidity('Select candidate electoral post')">
+                                             <option value="">--Select Position--</option>
+                                             <option value="President">President</option>
+                                             <option value="Governor">Governor</option>
+                                             <option value="Senator">Senator</option>
+                                             <option value="House Representative">House Representative</option>
+                                         </select>
+                                     </div>
+                                 </div>
+
+                                 <div class="form-group">
+                                     <label class="col-sm-2 control-label">Candidate Image</label>
+                                     <div class="col-lg-2 col-sm-2">
+                                         <div class="follow-ava2" style="position: relative; left:50px;">
+                                             <img id="output" src="{% static 'images/user.png' %}" style="max-height:150px; max-width: 150px; min-width: 150px; min-height: 150px;
+                                     border-top-left-radius: 50% 50%;
+                                         border-top-right-radius: 50% 50%;
+                                         border-bottom-left-radius: 50% 50%;
+                                         border-bottom-right-radius: 50% 50%;">
+                                         </div>
+                                     </div>
+                                     <div class="col-sm-10">
+                                         <input type="file" required accept="image/*" name="cphoto"
+                                             onchange="loadfile(event)" style="position: relative; left: 90px;">
+                                         <script>
+                                             var loadfile = function (event) {
+                                                 var output = document.getElementById('output');
+                                                 output.src = URL.createObjectURL(event.target.files[0]);
+                                                 output.onload = function () {
+                                                     URL.revokeObjectURL(output.src)
+                                                 }
+                                             };
+                                         </script>
+                                     </div>
+                                 </div>
+                                 <div class="form-group">
+                                     <label class="col-sm-2 control-label" for="position">Select Party:</label>
+                                     <div class="col-sm-10">
+                                         <select name="candidate_party" class="form-control round-input"
+                                             style="width:80%;"
+                                             required
+                                             oninvalid="this.setCustomValidity('Select candidate party')">
+                                             <option value="">--Select Position--</option>
+                                             <option value="Apc">All Progressive Congress</option>
+                                             <option value="Pdp">People Democratic Party</option>
+                                             <option value="Lp">Labour Party</option>
+                                         </select>
+                                     </div>
+                                 </div>
+                                 <div class="form-group">
+                                     <label class="col-sm-2 control-label">Party Image</label>
+                                     <div class="col-lg-2 col-sm-2">
+                                         <div class="follow-ava2" style="position: relative; left:50px;">
+                                             <img id="output2" src="{% static 'images/user.png' %}" style="max-height:150px; max-width: 150px; min-width: 150px; min-height: 150px;
+                                     border-top-left-radius: 50% 50%;
+                                         border-top-right-radius: 50% 50%;
+                                         border-bottom-left-radius: 50% 50%;
+                                         border-bottom-right-radius: 50% 50%;">
+                                         </div>
+                                     </div>
+                                     <div class="col-sm-10">
+                                         <input type="file" required accept="image/*" name="pphoto"
+                                             onchange="loadfile1(event)" style="position: relative; left: 90px;">
+                                         <script>
+                                             var loadfile1 = function (event) {
+                                                 var output = document.getElementById('output2');
+                                                 output.src = URL.createObjectURL(event.target.files[0]);
+                                                 output.onload = function () {
+                                                     URL.revokeObjectURL(output.src)
+                                                 }
+                                             };
+                                         </script>
+                                     </div>
+                                 </div>
+
+                                 <div class="form-group">
+                                     <label class="col-sm-2 control-label">Candidate Affidavit</label>
+                                     <div class="col-sm-10">
+                                         <input type="file" name="affidavit" required accept="application/pdf"
+                                             style="width:80%;">
+                                     </div>
+                                 </div>
+                                 <div class="form-group">
+                                     <div class="col-lg-offset-2 col-lg-10">
+                                         <button class="btn btn-primary" type="submit">Add Candidate</button>
+                                         <button class="btn btn-default" type="reset">Reset</button>
+                                     </div>
+                                 </div>
+                                 <div class="form-group">
+                                     <div class="col-lg-offset-2 col-lg-10">
+                                         {% for message in messages %}
+                                         <h3 style="color: green;"> {{message}} </h3>
+                                         {% endfor %}
+                                     </div>
+                                 </div>
+                             </form>
+                         </div>
+                     </section>
+                 </div>
+             </div>
+         </section>
+     </section>
+ </body>
+ {% endblock content %}
